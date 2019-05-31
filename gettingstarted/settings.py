@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import django_heroku
 import sys
-import urlparse
+from urllib.parse import urlparse
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -79,7 +79,6 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 # Register database schemes in URLs.
-urlparse.uses_netloc.append('mysql')
 try:
 
     # Check to make sure DATABASES is set in settings.py file.
@@ -89,7 +88,9 @@ try:
         DATABASES = {}
 
     if 'CLEARDB_DATABASE_URL' in os.environ:
-        url = urlparse.urlparse(os.environ['CLEARDB_DATABASE_URL'])
+        url = urlparse(os.environ['CLEARDB_DATABASE_URL'])
+        print("url : ")
+        print(url)
 
         # Ensure default database exists.
         DATABASES['default'] = DATABASES.get('default', {})
@@ -104,8 +105,7 @@ try:
         })
 
 
-        if url.scheme == 'mysql':
-            DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
+        DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
 except Exception:
     print(sys.exc_info())
 print("DATABASES : ")
