@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import django_heroku
 import sys
-import urllib.parse
+import urlparse
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -79,7 +79,7 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 # Register database schemes in URLs.
-urllib.parse.uses_netloc.append('mysql')
+urlparse.uses_netloc.append('mysql')
 try:
 
     # Check to make sure DATABASES is set in settings.py file.
@@ -89,7 +89,7 @@ try:
         DATABASES = {}
 
     if 'CLEARDB_DATABASE_URL' in os.environ:
-        url = urllib.parse.urlparse(os.environ['CLEARDB_DATABASE_URL'])
+        url = urlparse.urlparse(os.environ['CLEARDB_DATABASE_URL'])
 
         # Ensure default database exists.
         DATABASES['default'] = DATABASES.get('default', {})
@@ -108,7 +108,10 @@ try:
             DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
 except Exception:
     print(sys.exc_info())
-
+print("DATABASES : ")
+print(DATABASES)
+print("CLEARDB_DATABASE_URL : ")
+print(os.environ['CLEARDB_DATABASE_URL'])
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
