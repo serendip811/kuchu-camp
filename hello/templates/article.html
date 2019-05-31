@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+
+<div class="container">
+    <h2>{{ article.title }}</h2>
+    <div>
+        원본글 : <a href="http://kuchu-camp.net/{{ article.url }}" target="_blank">보기</a>
+    </div>
+    <div>
+        작성자 : {{ article.author }}
+    </div>
+    <div>
+        작성일시 : {{ article.date }}
+    </div>
+    <hr/>
+    <div>
+    {% autoescape off %}{{ article.contents }}{% endautoescape %}
+    </div>
+    <hr/>
+    <div>
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <div>
+                        {{ comment.author }} ( {{ comment.ip }}, {{ comment.datetime}} ) :
+                    </div>
+                    <div>
+                        {% autoescape off %}{{ comment.contents }}{% endautoescape %}    
+                    </div>
+                    
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    $("img").error(function (a) {
+        var srcs = a.target.src.split("/")
+        srcs.shift();
+        srcs.shift();
+        srcs.shift();
+        var src = "http://kuchu-camp.net/" + srcs.join("/")
+        $(this).unbind("error").attr("src", src);
+    });
+
+</script>
+{% endblock %}

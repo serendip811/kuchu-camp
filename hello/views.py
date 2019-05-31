@@ -1,19 +1,30 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Greeting
+from .models import Article
+from .models import Comment
 
 # Create your views here.
+# def index(request):
+#     # return HttpResponse('Hello from Python!')
+#     return render(request, "index.html")
+
 def index(request):
-    # return HttpResponse('Hello from Python!')
     return render(request, "index.html")
 
+def board(request, type):
+    articles = Article.objects.filter(board_type=type)
+    paginator = Paginator(articles, 25)
 
-def db(request):
+    page = request.GET.get('page')
+    articles = paginator.get_page(page)
 
-    greeting = Greeting()
-    greeting.save()
+    return render(request, "board.html", {"articles": articles})
 
-    greetings = Greeting.objects.all()
+def article(request, id):
 
-    return render(request, "db.html", {"greetings": greetings})
+    article = Article.objects.get(pk=id)
+    comments = Comment.objects.filter(article_id=id)
+
+    return render(request, "article.html", {"article": article, "comments": comments})
