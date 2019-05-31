@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import django_heroku
 import sys
-from urllib.parse import urlparse
+import urllib
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -88,7 +88,7 @@ try:
         DATABASES = {}
 
     if 'CLEARDB_DATABASE_URL' in os.environ:
-        url = urlparse(os.environ['CLEARDB_DATABASE_URL'])
+        url = urllib.parse(os.environ['CLEARDB_DATABASE_URL'])
         print("url : ")
         print(url)
 
