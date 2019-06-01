@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import django_heroku
 import sys
-from urlparse import urlparse
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -88,18 +86,25 @@ try:
         DATABASES = {}
 
     if 'CLEARDB_DATABASE_URL' in os.environ:
-        url = urlparse(os.environ['CLEARDB_DATABASE_URL'])
+        url = os.environ['CLEARDB_DATABASE_URL']
 
         # Ensure default database exists.
         DATABASES['default'] = DATABASES.get('default', {})
 
+        user_password = url.split("@")[0].replace("mysql://","").split(":")
+        user = user_password[0]
+        if len(user_password) > 1:
+            password = user_password[1]
+        else:
+            password = None
+
         # Update with environment configuration.
         DATABASES['default'].update({
-            'NAME': url.path[1:],
-            'USER': url.username,
-            'PASSWORD': url.password,
-            'HOST': url.hostname,
-            'PORT': url.port,
+            'NAME': url.split("@")[1].split("/")[1].split("?")[0],
+            'USER': user,
+            'PASSWORD': password,
+            'HOST': url.split("@")[1].split("/")[0],
+            'PORT': None,
         })
 
 
